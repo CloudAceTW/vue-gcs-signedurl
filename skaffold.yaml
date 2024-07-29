@@ -1,0 +1,37 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+metadata:
+  name: cloud-ace-vue-signurl
+deploy:
+  helm:
+    releases:
+      - name: cloud-ace-vue-signurl
+        namespace: cloud-ace-demo
+        createNamespace: false
+        chartPath: chart
+        valuesFiles:
+          - values.yaml
+        version: 0.1.0
+        setValueTemplates:
+          image.repository: "{{.IMAGE_REPO_vue_gcs_signurl}}"
+          image.tag: "{{.IMAGE_TAG_vue_gcs_signurl}}@{{.IMAGE_DIGEST_vue_gcs_signurl}}"
+        skipTests: true
+profiles:
+  - name: ci
+    build:
+      local:
+        useBuildkit: true
+      artifacts:
+      - image: vue-gcs-signurl
+        docker:
+          dockerfile: Dockerfile
+          cacheFrom: ["node:lts-alpine", "nginx:stable-alpine"]
+  - name: dev
+    build:
+      googleCloudBuild: {}
+      artifacts:
+      - image: vue-gcs-signurl
+        kaniko:
+          cache: {}
+  - name: prod
+  - name: staging
