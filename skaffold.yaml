@@ -25,7 +25,7 @@ profiles:
       - image: vue-gcs-signurl
         docker:
           dockerfile: Dockerfile
-          cacheFrom: ["node:lts-alpine", "nginx:stable-alpine"]
+          cacheFrom: ["node:lts-alpine", "nginxinc/nginx-unprivileged:1.25-alpine"]
   - name: dev
     build:
       googleCloudBuild: {}
